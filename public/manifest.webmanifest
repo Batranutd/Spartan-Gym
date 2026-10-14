@@ -1,0 +1,12 @@
+{
+  "name": "Spartan Gym",
+  "short_name": "Spartan",
+  "description": "Abonamentul, progresul, nutriția și antrenorii tăi de la Spartan Gym.",
+  "lang": "ro",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0E0F12",
+  "theme_color": "#0E0F12",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}

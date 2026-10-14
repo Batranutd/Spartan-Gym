@@ -1,0 +1,98 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/archivo/wdth.css";
+
+@theme {
+  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-display: "Archivo Variable", "Inter Variable", system-ui, sans-serif;
+
+  --color-ink: #0e0f12;
+  --color-surface: #16181d;
+  --color-surface-2: #1d2027;
+  --color-line: #2a2e37;
+  --color-text: #f2f3f5;
+  --color-muted: #9ba0aa;
+  --color-faint: #6b717d;
+  --color-volt: #d4ff3a;
+  --color-volt-soft: #d4ff3a1f;
+  --color-violet: #7c5cff;
+  --color-danger: #ff5c5c;
+  --color-ok: #3ddc97;
+}
+
+@layer base {
+:root {
+  color-scheme: dark;
+  background: var(--color-ink);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--color-ink);
+  color: var(--color-text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  font-stretch: 112%;
+  letter-spacing: -0.01em;
+}
+
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+input,
+textarea,
+button,
+select {
+  font: inherit;
+  color: inherit;
+}
+
+/* Câmpurile au minim 16px ca iOS să nu facă zoom la focus */
+input,
+textarea {
+  font-size: 16px;
+}
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: var(--color-text);
+  -webkit-box-shadow: 0 0 0 1000px var(--color-surface-2) inset;
+  caret-color: var(--color-text);
+}
+
+.safe-top {
+  padding-top: max(env(safe-area-inset-top), 12px);
+}
+.safe-bottom {
+  padding-bottom: max(env(safe-area-inset-bottom), 16px);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
