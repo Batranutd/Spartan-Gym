@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "motion/react";
 import { CalendarDays, Clock, Home as HomeIcon, LogOut, ShieldCheck, UserRound, Users } from "lucide-react";
-import type { ComponentType } from "react";
+import { useRef, type ComponentType } from "react";
 import { useStore } from "../../store/useStore";
 import { useTrainerNav } from "../../lib/nav";
 import { Avatar, Badge, Card, Scroll, Stagger, TopBar } from "../../components/ui/kit";
@@ -23,7 +23,10 @@ const ROUTES: Record<string, ComponentType<{ params?: Record<string, string> }>>
 };
 
 export function useTrainer(): Trainer {
-  return useStore((s) => s.trainers.find((t) => t.id === s.session.trainerId)) as Trainer;
+  const t = useStore((s) => s.trainers.find((x) => x.id === s.session.trainerId));
+  const last = useRef<Trainer | undefined>(t);
+  if (t) last.current = t;
+  return (t ?? last.current) as Trainer;
 }
 
 export function TrainerApp() {
@@ -49,7 +52,7 @@ export function TrainerApp() {
           </motion.div>
         )}
       </AnimatePresence>
-      <nav className="absolute bottom-0 inset-x-0 z-20 safe-bottom pt-2 px-2 bg-ink/92 backdrop-blur-xl border-t border-line" aria-label="Meniu antrenor">
+      <nav className="absolute bottom-0 inset-x-0 z-20 safe-bottom pt-2 px-0.5 bg-ink/92 backdrop-blur-xl border-t border-line" aria-label="Meniu antrenor">
         <div className="flex">
           {TABS.map((x) => {
             const on = x.key === tab;
@@ -102,7 +105,7 @@ function Pending({ t }: { t: Trainer }) {
         <Stagger i={2} className="mt-6 flex flex-col gap-2">
           <p className="text-[13px] text-faint">Demo: poți aproba profilul chiar tu, din panoul de administrare.</p>
           <Button variant="secondary" icon={<ShieldCheck size={18} />} onClick={() => s.enterAs("admin")}>
-            Deschide panoul de administrare
+            Panoul de administrare
           </Button>
           <Button variant="ghost" icon={<LogOut size={18} />} onClick={() => s.logout()}>
             Ieși

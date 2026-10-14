@@ -62,10 +62,10 @@ export function AdminSettings(_: AdminPageProps) {
         <p className="text-[14px] text-muted mb-3 leading-snug">Treci rapid între roluri ca să vezi același flux din ambele părți. Datele sunt comune.</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           <Button variant="secondary" icon={<User size={18} />} onClick={() => (me ? s.enterAs("client", me.id) : s.logout())}>
-            {me ? `Client: ${me.firstName}` : "Ecranul clientului"}
+            Vezi ca client
           </Button>
           <Button variant="secondary" icon={<Users size={18} />} onClick={() => s.enterAs("trainer", "t-mihai")}>
-            Antrenor: Mihai Rus
+            Vezi ca antrenor
           </Button>
         </div>
         <button

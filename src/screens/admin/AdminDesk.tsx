@@ -85,7 +85,7 @@ export function AdminDesk(_: AdminPageProps) {
         <Panel title="Check-in">
           <div className="flex flex-col gap-3">
             <div className="grid grid-cols-[minmax(0,1fr)_auto] gap-2 items-end">
-              <Field label="Nume, telefon sau ID membru" prefix={<Search size={18} />} placeholder="SG-123456 sau Andrei" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && q.toUpperCase().startsWith("SG-") && byCode(q)} />
+              <Field label="Nume, telefon sau ID membru" prefix={<Search size={18} />} placeholder="ID sau nume" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && q.toUpperCase().startsWith("SG-") && byCode(q)} />
               <Button full={false} size="lg" variant="secondary" icon={<Camera size={19} />} aria-label="Scanează codul QR din poză" onClick={() => qrRef.current?.click()}>
                 <span className="hidden sm:inline">Scanează</span>
               </Button>

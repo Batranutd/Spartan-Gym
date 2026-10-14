@@ -28,7 +28,7 @@ export function AdminLoyalty(_: AdminPageProps) {
   const [edit, setEdit] = useState<Reward | null>(null);
   const r = s.pointRules;
   const given = s.points.filter((p) => p.delta > 0).reduce((a, p) => a + p.delta, 0);
-  const spent = -s.points.filter((p) => p.delta < 0).reduce((a, p) => a + p.delta, 0);
+  const spent = Math.abs(s.points.filter((p) => p.delta < 0).reduce((a, p) => a + p.delta, 0));
   const top = useMemo(() => s.clients.map((c) => ({ c, p: pointsOf(s, c.id) })).sort((a, b) => b.p - a.p).slice(0, 8), [s]);
 
   const rule = (k: keyof PointRules, label: string, unit = "puncte") => (

@@ -65,7 +65,7 @@ export function Home() {
           <div className="relative rounded-[28px] overflow-hidden border border-line bg-surface p-4">
             <div className="absolute -right-16 -top-20 w-56 h-56 rounded-full bg-volt/10 blur-3xl" aria-hidden />
             <div className="relative flex items-center gap-4">
-              <Ring pct={info.pct} size={118} stroke={11} color={info.state === "expiră curând" ? "var(--color-warn)" : "var(--color-volt)"}>
+              <Ring pct={info.pct} size={108} stroke={10} color={info.state === "expiră curând" ? "var(--color-warn)" : "var(--color-volt)"}>
                 {info.active ? (
                   <div>
                     <CountUp value={info.daysLeft} className="font-display font-extrabold text-[34px] leading-none text-text" />
@@ -77,7 +77,7 @@ export function Home() {
               </Ring>
               <div className="flex-1 min-w-0">
                 <Badge tone={info.sub ? stateTone : "neutral"}>{info.pending && !info.active ? "De plătit la recepție" : info.state === "fără abonament" ? "Fără abonament" : info.state === "activ" ? "Activ" : info.state === "expiră curând" ? "Expiră curând" : "Expirat"}</Badge>
-                <div className="font-display font-bold text-[19px] mt-2 leading-tight text-text line-clamp-2">{plan ? `Abonament ${plan.name}` : "Niciun abonament activ"}</div>
+                <div className="font-display font-bold text-[18px] mt-2 leading-tight text-text text-balance">{plan ? `Abonament ${plan.name}` : "Niciun abonament activ"}</div>
                 {info.sub ? (
                   <p className="text-[13px] text-muted mt-1 leading-snug">
                     {info.active ? "Valabil până pe" : "A expirat pe"} <span className="text-text font-semibold">{fmtDate(info.sub.end, { day: "numeric", month: "long" })}</span>

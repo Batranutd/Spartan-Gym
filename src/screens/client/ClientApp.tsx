@@ -66,7 +66,7 @@ export function ClientApp() {
         )}
       </AnimatePresence>
 
-      <nav className="absolute bottom-0 inset-x-0 z-20 safe-bottom pt-2 px-2 bg-ink/92 backdrop-blur-xl border-t border-line" aria-label="Meniu principal">
+      <nav className="absolute bottom-0 inset-x-0 z-20 safe-bottom pt-2 px-0.5 bg-ink/92 backdrop-blur-xl border-t border-line" aria-label="Meniu principal">
         <div className="flex">
           {TABS.map((t) => {
             const on = t.key === tab;
@@ -76,7 +76,7 @@ export function ClientApp() {
                 <motion.span animate={{ y: on ? -1 : 0, scale: on ? 1.08 : 1 }} className={on ? "text-volt" : "text-faint"}>
                   <t.icon size={23} strokeWidth={on ? 2.3 : 1.9} />
                 </motion.span>
-                <span className={`text-[11px] leading-none truncate max-w-full px-0.5 ${on ? "text-text font-semibold" : "text-muted"}`}>{t.label}</span>
+                <span className={`text-[11px] leading-none tracking-[-0.015em] whitespace-nowrap ${on ? "text-text font-semibold" : "text-muted"}`}>{t.label}</span>
               </button>
             );
           })}

@@ -44,6 +44,7 @@ export interface AdminPageProps {
 interface Section {
   key: string;
   label: string;
+  title?: string;
   icon: typeof Users;
   C: ComponentType<AdminPageProps>;
   badge?: (s: ReturnType<typeof useStore.getState>) => number;
@@ -60,7 +61,7 @@ const SECTIONS: Section[] = [
   { key: "loyalty", label: "Fidelitate", icon: Award, C: AdminLoyalty },
   { key: "challenges", label: "Provocări", icon: Trophy, C: AdminChallenges, badge: (s) => s.challenges.reduce((a, c) => a + c.entries.filter((e) => e.status === "trimis").length, 0) },
   { key: "trainers", label: "Antrenori", icon: UserCheck, C: AdminTrainers, badge: (s) => s.trainers.filter((t) => t.status === "în așteptare").length },
-  { key: "feedback", label: "Recenzii și reclamații", icon: MessageSquareText, C: AdminFeedback, badge: (s) => s.tickets.filter((t) => t.status === "nouă").length },
+  { key: "feedback", label: "Recenzii", title: "Recenzii și reclamații", icon: MessageSquareText, C: AdminFeedback, badge: (s) => s.tickets.filter((t) => t.status === "nouă").length },
   { key: "gym", label: "Sala", icon: Building2, C: AdminGym },
   { key: "settings", label: "Setări", icon: Settings, C: AdminSettings },
 ];
@@ -126,14 +127,14 @@ export function AdminApp() {
           </button>
           <div className="flex-1 min-w-0">
             <div className="text-[12px] text-muted truncate">{s.gym.name} · administrare</div>
-            <div className="font-display font-extrabold text-[19px] leading-tight truncate">{cur.label}</div>
+            <div className="font-display font-extrabold text-[19px] leading-tight truncate">{cur.title ?? cur.label}</div>
           </div>
           <Emblem size={30} />
         </header>
 
         <main id="admin-main" className="flex-1 min-h-0 overflow-y-auto overflow-x-hidden">
           <div className="max-w-[1180px] mx-auto px-4 lg:px-8 pt-4 lg:pt-8 pb-24">
-            <h1 className="hidden lg:block font-display font-extrabold text-[30px] mb-6">{cur.label}</h1>
+            <h1 className="hidden lg:block font-display font-extrabold text-[30px] mb-6">{cur.title ?? cur.label}</h1>
             <AnimatePresence mode="wait">
               <motion.div key={cur.key + (param ?? "")} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }}>
                 <cur.C go={go} param={param} />
