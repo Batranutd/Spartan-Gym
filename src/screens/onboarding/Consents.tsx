@@ -5,7 +5,8 @@ import { StepShell, Stagger } from "../../components/ui/StepShell";
 import { Button } from "../../components/ui/Button";
 import { Sheet } from "../../components/ui/Sheet";
 import { GdprText, LocationText, TermsText } from "../../lib/legal";
-import { useApp, type LocationConsent } from "../../store/useApp";
+import { useStore } from "../../store/useStore";
+type LocationConsent = "granted" | "denied" | "skipped";
 
 function Check3D({ on }: { on: boolean }) {
   return (
@@ -73,7 +74,9 @@ function ConsentCard({
 }
 
 export function Consents() {
-  const { consents, saveConsents, setStep } = useApp();
+  const consents = useStore((s) => s.draft);
+  const saveConsents = useStore((s) => s.setDraft);
+  const setStep = useStore((s) => s.setStep);
   const [terms, setTerms] = useState(!!consents.termsAcceptedAt);
   const [gdpr, setGdpr] = useState(!!consents.gdprAcceptedAt);
   const [marketing, setMarketing] = useState(consents.marketing);

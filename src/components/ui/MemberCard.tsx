@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useSpring, useTransform } from "motion/react";
 import { Emblem } from "./Logo";
-import { brand } from "../../brand";
+import { useStore } from "../../store/useStore";
 
 interface Props {
   name: string;
@@ -13,6 +13,7 @@ interface Props {
 
 /** Card de membru care se înclină 3D după deget / mouse. */
 export function MemberCard({ name, photo, initials, since, memberId, goal }: Props) {
+  const gymName = useStore((s) => s.gym.name);
   const px = useMotionValue(0.5);
   const py = useMotionValue(0.5);
   const rx = useSpring(useTransform(py, [0, 1], [12, -12]), { stiffness: 200, damping: 18 });
@@ -46,7 +47,7 @@ export function MemberCard({ name, photo, initials, since, memberId, goal }: Pro
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               <Emblem size={28} />
-              <span className="font-display font-extrabold uppercase tracking-wide text-[15px]">{brand.gymName}</span>
+              <span className="font-display font-extrabold uppercase tracking-wide text-[15px]">{gymName}</span>
             </div>
             <span className="text-[11px] uppercase tracking-[0.2em] text-volt font-semibold">Membru</span>
           </div>
@@ -73,8 +74,3 @@ export function MemberCard({ name, photo, initials, since, memberId, goal }: Pro
   );
 }
 
-export function memberIdFrom(seed: string) {
-  let h = 7;
-  for (const c of seed) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  return `SG-${(h % 900000) + 100000}`;
-}

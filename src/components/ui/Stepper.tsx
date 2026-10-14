@@ -25,7 +25,7 @@ export function Stepper({ label, unit, value, placeholder, min, max, step = 1, o
     if (document.activeElement?.getAttribute("data-stepper") !== label) setText(value?.toString().replace(".", ",") ?? "");
   }, [value, placeholder, label]);
 
-  const clamp = (v: number) => Math.min(max, Math.max(min, Math.round(v / step) * step));
+  const clamp = (v: number) => +Math.min(max, Math.max(min, Math.round(v / step) * step)).toFixed(2);
   const bump = (dir: 1 | -1) => {
     const next = clamp(+(valRef.current + dir * step).toFixed(1));
     valRef.current = next;

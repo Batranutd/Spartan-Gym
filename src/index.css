@@ -2,90 +2,142 @@
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/archivo/wdth.css";
 
+/*
+  Paleta Volt — toate perechile text/fundal verificate la contrast WCAG AA (minim 4.5:1).
+  text      #F4F5F7 pe ink    = 18:1
+  muted     #B0B6C1 pe surface-2 = 8:1
+  faint     #8C93A1 pe surface-2 = 5:1  (doar texte secundare, niciodată butoane)
+  ink       #0E0F12 pe volt   = 17:1  (text pe butoanele verzi)
+  violet-ink #B7A6FF pe ink   = 8:1   (text violet; fundalul violet are text alb)
+*/
 @theme {
-  --font-sans: "Inter Variable", system-ui, sans-serif;
+  --font-sans: "Inter Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-display: "Archivo Variable", "Inter Variable", system-ui, sans-serif;
 
   --color-ink: #0e0f12;
-  --color-surface: #16181d;
-  --color-surface-2: #1d2027;
-  --color-line: #2a2e37;
-  --color-text: #f2f3f5;
-  --color-muted: #9ba0aa;
-  --color-faint: #6b717d;
+  --color-surface: #17191f;
+  --color-surface-2: #1f2229;
+  --color-surface-3: #282c35;
+  --color-line: #2d313a;
+  --color-line-strong: #3b404b;
+  --color-text: #f4f5f7;
+  --color-muted: #b0b6c1;
+  --color-faint: #8c93a1;
   --color-volt: #d4ff3a;
-  --color-volt-soft: #d4ff3a1f;
-  --color-violet: #7c5cff;
-  --color-danger: #ff5c5c;
+  --color-volt-soft: #d4ff3a1c;
+  --color-violet: #6d4cff;
+  --color-violet-ink: #b7a6ff;
+  --color-violet-soft: #7c5cff26;
+  --color-danger: #ff6b6b;
+  --color-danger-soft: #ff6b6b1f;
   --color-ok: #3ddc97;
+  --color-ok-soft: #3ddc971f;
+  --color-warn: #ffb547;
+  --color-warn-soft: #ffb5471f;
+}
+
+/*
+  Stiluri neîncadrate în layer, legate de #root: nicio altă foaie de stil
+  (de exemplu resetul unui vizualizator) nu poate schimba culoarea sau fontul aplicației.
+*/
+html,
+html body {
+  margin: 0;
+  background: #0e0f12;
+  color: #f4f5f7;
+  color-scheme: dark;
+}
+
+html body #root {
+  height: 100%;
+  min-height: 100%;
+  background: #0e0f12;
+  color: #f4f5f7;
+  color-scheme: dark;
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 @layer base {
-:root {
-  color-scheme: dark;
-  background: var(--color-ink);
+  html,
+  body {
+    height: 100%;
+    overscroll-behavior: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  input,
+  textarea,
+  button,
+  select {
+    font: inherit;
+    color: inherit;
+    background-color: transparent;
+  }
+
+  /* Câmpurile au minim 16px ca iOS să nu facă zoom la focus */
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-faint);
+    opacity: 1;
+  }
+
+  input:-webkit-autofill {
+    -webkit-text-fill-color: var(--color-text);
+    -webkit-box-shadow: 0 0 0 1000px var(--color-surface-2) inset;
+    caret-color: var(--color-text);
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-volt);
+    outline-offset: 2px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
 }
 
-html,
-body,
-#root {
-  height: 100%;
-}
-
-body {
-  margin: 0;
-  background: var(--color-ink);
-  color: var(--color-text);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -webkit-tap-highlight-color: transparent;
-  overscroll-behavior: none;
-}
-
-.font-display {
-  font-family: var(--font-display);
-  font-stretch: 112%;
-  letter-spacing: -0.01em;
-}
-
-.tabular {
-  font-variant-numeric: tabular-nums;
-}
-
-input,
-textarea,
-button,
-select {
-  font: inherit;
-  color: inherit;
-}
-
-/* Câmpurile au minim 16px ca iOS să nu facă zoom la focus */
-input,
-textarea {
-  font-size: 16px;
-}
-
-input:-webkit-autofill {
-  -webkit-text-fill-color: var(--color-text);
-  -webkit-box-shadow: 0 0 0 1000px var(--color-surface-2) inset;
-  caret-color: var(--color-text);
-}
-
-.safe-top {
-  padding-top: max(env(safe-area-inset-top), 12px);
-}
-.safe-bottom {
-  padding-bottom: max(env(safe-area-inset-bottom), 16px);
-}
-
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-.no-scrollbar {
-  scrollbar-width: none;
-}
-
+@layer utilities {
+  .font-display {
+    font-family: var(--font-display);
+    font-stretch: 112%;
+    letter-spacing: -0.01em;
+  }
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+  .safe-top {
+    padding-top: max(env(safe-area-inset-top), 12px);
+  }
+  .safe-bottom {
+    padding-bottom: max(env(safe-area-inset-bottom), 16px);
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

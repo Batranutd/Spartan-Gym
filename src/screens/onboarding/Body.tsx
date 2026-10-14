@@ -4,11 +4,16 @@ import { ArrowRight, Camera, Lock, Pencil } from "lucide-react";
 import { StepShell, Stagger } from "../../components/ui/StepShell";
 import { Stepper } from "../../components/ui/Stepper";
 import { Button } from "../../components/ui/Button";
-import { useApp } from "../../store/useApp";
+import { useStore } from "../../store/useStore";
+import { Segmented } from "../../components/ui/kit";
 import { fileToSquareDataUrl } from "../../lib/image";
 
 export function Body() {
-  const { profile, account, saveProfile, setStep } = useApp();
+  const profile = useStore((s) => s.draft);
+  const account = profile;
+  const saveProfile = useStore((s) => s.setDraft);
+  const setStep = useStore((s) => s.setStep);
+  const [sex, setSex] = useState<"M" | "F" | "x">(profile.sex ?? "x");
   const [photo, setPhoto] = useState(profile.photo);
   const [age, setAge] = useState(profile.age);
   const [height, setHeight] = useState(profile.heightCm);
@@ -38,7 +43,7 @@ export function Body() {
   const submit = () => {
     setTried(true);
     if (errors.age || errors.height || errors.weight) return;
-    saveProfile({ photo, age, heightCm: height, weightKg: weight });
+    saveProfile({ photo, age, heightCm: height, weightKg: weight, sex: sex === "x" ? null : sex });
     setStep("goals");
   };
 
@@ -86,13 +91,25 @@ export function Body() {
               {photo ? <Pencil size={16} /> : <Camera size={18} />}
             </span>
           </motion.button>
-          <input ref={fileRef} type="file" accept="image/*" hidden onChange={(e) => onFile(e.target.files?.[0])} />
+          <input ref={fileRef} type="file" onClick={(e) => ((e.target as HTMLInputElement).value = "")} accept="image/*" hidden onChange={(e) => onFile(e.target.files?.[0])} />
           <p className="text-[14px] text-muted mt-3">{photo ? "Arăți bine. Atinge ca să schimbi." : "Adaugă o poză (opțional)"}</p>
           {photoErr && <p className="text-[13px] text-danger mt-1">{photoErr}</p>}
         </div>
       </Stagger>
 
       <div className="flex flex-col gap-5 mt-7">
+        <Stagger i={1}>
+          <div className="text-[14px] text-muted mb-2 font-medium">Sex (pentru calculul caloriilor)</div>
+          <Segmented
+            value={sex}
+            onChange={setSex}
+            options={[
+              { value: "M", label: "Bărbat" },
+              { value: "F", label: "Femeie" },
+              { value: "x", label: "Nu spun" },
+            ]}
+          />
+        </Stagger>
         <Stagger i={1}>
           <Stepper label="Vârsta" unit="ani" value={age} placeholder={28} min={14} max={99} onChange={setAge} error={tried ? errors.age : null} />
         </Stagger>

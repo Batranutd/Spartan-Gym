@@ -4,18 +4,23 @@ import { ArrowRight, Eye, EyeOff, Lock, Mail, Phone } from "lucide-react";
 import { StepShell, Stagger } from "../../components/ui/StepShell";
 import { Field } from "../../components/ui/Field";
 import { Button } from "../../components/ui/Button";
-import { hashPassword, useApp } from "../../store/useApp";
+import { useStore } from "../../store/useStore";
+import { hashPassword } from "../../lib/auth";
 import { formatPhone, isEmail, isName, normalizePhone, passwordStrength } from "../../lib/validate";
 
 type Errors = Partial<Record<"firstName" | "lastName" | "email" | "phone" | "password", string>>;
 
 export function Account() {
-  const { account, saveAccount, setStep } = useApp();
+  const draft = useStore((s) => s.draft);
+  const setDraft = useStore((s) => s.setDraft);
+  const setStep = useStore((s) => s.setStep);
+  const clients = useStore((s) => s.clients);
+  const taken = clients.map((c) => c.email);
   const [f, setF] = useState({
-    firstName: account?.firstName ?? "",
-    lastName: account?.lastName ?? "",
-    email: account?.email ?? "",
-    phone: account ? formatPhone(account.phone.replace("+40", "0")) : "",
+    firstName: draft.firstName,
+    lastName: draft.lastName,
+    email: draft.email,
+    phone: draft.phone ? formatPhone(draft.phone.replace("+40", "0")) : "",
     password: "",
   });
   const [show, setShow] = useState(false);
@@ -26,9 +31,10 @@ export function Account() {
   if (!isName(f.firstName)) errors.firstName = "Scrie prenumele (minim 2 litere).";
   if (!isName(f.lastName)) errors.lastName = "Scrie numele de familie.";
   if (!isEmail(f.email)) errors.email = "Adresa de e-mail nu pare corectă.";
+  else if (taken.includes(f.email.trim().toLowerCase())) errors.email = "Există deja un cont cu acest e-mail. Intră în cont din ecranul de început.";
   if (!normalizePhone(f.phone)) errors.phone = "Număr de mobil românesc, de forma 07xx xxx xxx.";
   const strength = passwordStrength(f.password);
-  if (strength.score < 2) errors.password = "Minim 8 caractere, cu litere și cifre.";
+  if (strength.score < 2 && !(draft.passwordHash && !f.password)) errors.password = "Minim 8 caractere, cu litere și cifre.";
 
   const err = (k: keyof Errors) => ((touched[k] || submitted) && errors[k]) || null;
   const set = (k: keyof typeof f) => (e: React.ChangeEvent<HTMLInputElement>) =>
@@ -38,12 +44,12 @@ export function Account() {
   const submit = async () => {
     setSubmitted(true);
     if (Object.keys(errors).length) return;
-    saveAccount({
+    setDraft({
       firstName: f.firstName.trim(),
       lastName: f.lastName.trim(),
       email: f.email.trim().toLowerCase(),
       phone: normalizePhone(f.phone)!,
-      passwordHash: await hashPassword(f.password),
+      passwordHash: f.password ? await hashPassword(f.password) : draft.passwordHash,
     });
     setStep("consents");
   };
@@ -110,7 +116,7 @@ export function Account() {
             label="Parolă"
             type={show ? "text" : "password"}
             autoComplete="new-password"
-            placeholder="Minim 8 caractere"
+            placeholder={draft.passwordHash ? "Parola e salvată" : "Minim 8 caractere"}
             prefix={<Lock size={19} />}
             suffix={
               <button type="button" onClick={() => setShow((s) => !s)} aria-label={show ? "Ascunde parola" : "Arată parola"} className="w-10 h-10 grid place-items-center">

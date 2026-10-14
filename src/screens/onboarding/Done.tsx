@@ -2,9 +2,8 @@ import { useMemo } from "react";
 import { motion } from "motion/react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "../../components/ui/Button";
-import { MemberCard, memberIdFrom } from "../../components/ui/MemberCard";
-import { useApp } from "../../store/useApp";
-import { brand } from "../../brand";
+import { MemberCard } from "../../components/ui/MemberCard";
+import { useStore } from "../../store/useStore";
 
 const COLORS = ["#D4FF3A", "#7C5CFF", "#F2F3F5", "#D4FF3A"];
 
@@ -35,9 +34,14 @@ function Confetti() {
 }
 
 export function Done() {
-  const { account, profile, createdAt, login } = useApp();
+  const id = useStore((s) => s.newClientId);
+  const account = useStore((s) => s.clients.find((c) => c.id === s.newClientId));
+  const gymName = useStore((s) => s.gym.name);
+  const enterAs = useStore((s) => s.enterAs);
   if (!account) return null;
-  const since = new Date(createdAt ?? Date.now()).toLocaleDateString("ro-RO", { month: "long", year: "numeric" });
+  const profile = account;
+  const login = () => enterAs("client", id);
+  const since = new Date(account.createdAt).toLocaleDateString("ro-RO", { month: "long", year: "numeric" });
 
   return (
     <div className="h-full flex flex-col relative overflow-hidden">
@@ -57,7 +61,7 @@ export function Done() {
         </div>
 
         <motion.h1
-          className="font-display font-extrabold text-[32px] leading-tight text-center mt-6"
+          className="font-display font-extrabold text-[30px] leading-tight text-center mt-6 text-text"
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.45, duration: 0.5 }}
@@ -65,7 +69,7 @@ export function Done() {
           Bun venit, {account.firstName}!
         </motion.h1>
         <motion.p className="text-muted text-center text-[16px] mt-2" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.55 }}>
-          Contul tău la {brand.gymName} e gata.
+          Contul tău la {gymName} e gata. Ai primit și primele puncte.
         </motion.p>
 
         <motion.div
@@ -79,7 +83,7 @@ export function Done() {
             photo={profile.photo}
             initials={`${account.firstName[0]}${account.lastName[0]}`.toUpperCase()}
             since={since}
-            memberId={memberIdFrom(account.email)}
+            memberId={account.memberId}
             goal={profile.goals[0]}
           />
           <p className="text-center text-[13px] text-faint mt-3">Mișcă degetul pe card</p>

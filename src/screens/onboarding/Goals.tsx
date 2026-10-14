@@ -4,7 +4,7 @@ import { Check, Flame, Mountain, Target, ThumbsUp } from "lucide-react";
 import { StepShell, Stagger } from "../../components/ui/StepShell";
 import { ChipGroup } from "../../components/ui/Chip";
 import { Button } from "../../components/ui/Button";
-import { useApp } from "../../store/useApp";
+import { useStore } from "../../store/useStore";
 import { GOALS, MUSCLES, SKILLS } from "../../lib/options";
 
 function Section({ icon, title, hint, children, error }: { icon: ReactNode; title: string; hint: string; children: ReactNode; error?: string | null }) {
@@ -28,7 +28,10 @@ function Section({ icon, title, hint, children, error }: { icon: ReactNode; titl
 }
 
 export function Goals() {
-  const { profile, saveProfile, setStep, finishOnboarding } = useApp();
+  const profile = useStore((s) => s.draft);
+  const saveProfile = useStore((s) => s.setDraft);
+  const setStep = useStore((s) => s.setStep);
+  const finishOnboarding = useStore((s) => s.finishOnboarding);
   const [goals, setGoals] = useState(profile.goals);
   const [improve, setImprove] = useState(profile.improve);
   const [strengths, setStrengths] = useState(profile.strengths);
